@@ -52,7 +52,29 @@ class GroupCollection extends Processor {
 
   map(data) {
     console.log("input data for map: ",data);
-    return ['returned mapped data'];
+    data.included = _.groupBy(data.included, 'type');
+    _.forEach(data.included, (value, key) => {
+      data.included[key] = _.keyBy(value, v => v.id);
+    });
+    // data.data = _.keyBy(data.data, o => o.id);
+    let objects = _.map(data.data, (obj, key) => {
+      return {
+        id: obj.id,
+        name: obj.attributes.name,
+        description: obj.attributes.description,
+        category: obj.attributes.category,
+        ordinalNumber: obj.attributes.ordinalNumber,
+        activityGroups: _.map(obj.relationships.orderedGroups.data, og => {
+          return {
+            id: data.included.orderedGroups[og.id].relationships.activityGroup.data.id,
+            type: data.included.orderedGroups[og.id].relationships.activityGroup.data.type,
+            ordinalNumber: data.included.orderedGroups[og.id].attributes.ordinalNumber
+          }
+        })
+      }
+    });
+    // let results = _.keyBy(objects, o => o.id);
+    return objects;
   }
 
   persist(data) {
