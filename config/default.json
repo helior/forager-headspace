@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "bearerToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgwZmQxOGFmLWFkNWUtNGIyMS1iNDlhLWZiZDRlOTEyZDEyMSIsInVzZXJJZCI6IkhTVVNFUl9TTE5QSUxYNzUyQktJOUJQIiwicGxhdGZvcm0iOiJERVNLVE9QIiwic2NvcGUiOlsiVVNFUjpIU1VTRVJfU0xOUElMWDc1MkJLSTlCUCJdLCJwcml2aWxlZ2VzIjpbIlNUQU5EQVJEX0NPTlRFTlQiXSwiaWF0IjoxNTI0OTQ1NjQzODc5LCJ2MkFwaUtleSI6InZ5YWRrVlJRRUNxN0ZFSzFvZHFiR0p6SUNKUXFMMzdKZUNpNHlQb3d3d1k9In0._KbTXmfqfdK5ACWFjMPq727ODvh2nGCIwJoY-7cMehk"
+  },
+  "app": {
+    "groupCollection": {},
+    "activityGroup": {},
+    "activity": {},
+    "variations": {},
+    "mediaItem": {}
+  }
+}
