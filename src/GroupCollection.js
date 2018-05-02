@@ -2,6 +2,7 @@ const _ = require('lodash');
 const request = require('./lib/requestFactory');
 const Processor = require('./lib/Processor');
 const makeArray = require('./utils/makeArray');
+const buildRelationshipStubs = require('./utils/buildRelationshipStubs');
 
 class GroupCollection extends Processor {
   constructor(config) {
@@ -51,30 +52,34 @@ class GroupCollection extends Processor {
   }
 
   map(data) {
-    console.log("input data for map: ",data);
+    // console.log("input data for map: ",data);
+    // JSON-API includes are structured as arrays, but here I group the elements
+    // by "type" into their respective object named-properties.
     data.included = _.groupBy(data.included, 'type');
-    _.forEach(data.included, (value, key) => {
-      data.included[key] = _.keyBy(value, v => v.id);
+
+
+    // Convenience. Key elements by id in replaced "type" objects
+    _.forEach(data.included, (includeElements, type) => {
+      data.included[type] = _.keyBy(includeElements, e => e.id);
     });
+
+    // Convenience. Assuming response items are unique.
+    // * But decided against it. * 
     // data.data = _.keyBy(data.data, o => o.id);
-    let objects = _.map(data.data, (obj, key) => {
+
+    // Build an array of Group Collection items.
+    let groupCollections = _.map(data.data, (item, key) => {
       return {
-        id: obj.id,
-        name: obj.attributes.name,
-        description: obj.attributes.description,
-        category: obj.attributes.category,
-        ordinalNumber: obj.attributes.ordinalNumber,
-        activityGroups: _.map(obj.relationships.orderedGroups.data, og => {
-          return {
-            id: data.included.orderedGroups[og.id].relationships.activityGroup.data.id,
-            type: data.included.orderedGroups[og.id].relationships.activityGroup.data.type,
-            ordinalNumber: data.included.orderedGroups[og.id].attributes.ordinalNumber
-          }
-        })
+        id: item.id,
+        name: item.attributes.name,
+        description: item.attributes.description,
+        category: item.attributes.category,
+        ordinalNumber: item.attributes.ordinalNumber,
+        activityGroups: buildRelationshipStubs(item, 'orderedGroups', 'activityGroup', data)
       }
     });
-    // let results = _.keyBy(objects, o => o.id);
-    return objects;
+
+    return groupCollections;
   }
 
   persist(data) {
@@ -87,5 +92,6 @@ class GroupCollection extends Processor {
   }
 
 }
+
 
 module.exports = GroupCollection;

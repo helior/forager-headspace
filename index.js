@@ -4,6 +4,7 @@ const config = require('config');
 const GroupCollection = require('./src/GroupCollection');
 
 debugger;
+
 let url = "https://api.prod.headspace.com/content/group-collections";
 
 // request(url, bearerToken)
