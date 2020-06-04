@@ -3,6 +3,9 @@ const request = require('./lib/requestFactory');
 const Processor = require('./lib/Processor');
 const makeArray = require('./utils/makeArray');
 const buildRelationshipStubs = require('./utils/buildRelationshipStubs');
+const Datastore = require('nedb');
+
+let db = new Datastore({ filename: 'db/GroupCollection.db', autoload: true });
 
 class GroupCollection extends Processor {
   constructor(config) {
@@ -64,13 +67,13 @@ class GroupCollection extends Processor {
     });
 
     // Convenience. Assuming response items are unique.
-    // * But decided against it. * 
+    // * But decided against it. *
     // data.data = _.keyBy(data.data, o => o.id);
 
     // Build an array of Group Collection items.
     let groupCollections = _.map(data.data, (item, key) => {
       return {
-        id: item.id,
+        _id: item.id,
         name: item.attributes.name,
         description: item.attributes.description,
         category: item.attributes.category,
@@ -79,15 +82,21 @@ class GroupCollection extends Processor {
       }
     });
 
+    // TODO: Collect IDs for relationship to fetch. Perhaps reference to "next"
+    // handler and conforming to an API to prepare for the next batch?
     return groupCollections;
   }
 
-  persist(data) {
-    console.log("input data for persist: ",data);
-    return ['returned persiste data'];
+  persist(groupCollections) {
+    db.insert(groupCollections, (err, newDocs) => {
+      if (err) {
+        console.error(err);
+       }
+       return newDocs;
+    })
   }
 
-  getOutput() {
+  getOutput(data) {
     return this.output;
   }
 

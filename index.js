@@ -33,6 +33,8 @@ let groupCollector = new GroupCollection(config.get('app.groupCollection'));
 Promise.resolve(url)
 // .then(data => {return groupCollector.processAll(data)})
 .then(groupCollector.processAll.bind(groupCollector))
+// .then() // save to DB
+// .then() // Query all activityGroups to feed into activityGroupCollector
 // .then(processActivityGroups())
 // .then(processActivities())
 // .then(processVariations())
