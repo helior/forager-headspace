@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "config": "^1.30.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.19",
     "nedb": "^1.8.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
